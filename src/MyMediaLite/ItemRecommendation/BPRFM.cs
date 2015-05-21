@@ -26,7 +26,7 @@ namespace MyMediaLite.ItemRecommendation
 
         protected override void InitModel()
         {
-            num_features = MaxUserID + MaxUserID + 1;
+            num_features = MaxUserID + MaxItemID + 1;
             
             v = new Matrix<float>(num_features, NumFactors);
             v.InitNormal(InitMean, InitStdDev);
@@ -36,7 +36,7 @@ namespace MyMediaLite.ItemRecommendation
         }
 
 
-        protected virtual void UpdateFactors(int user_id, int item_id, int other_item_id, bool update_u, bool update_i, bool update_j)
+        protected override void UpdateFactors(int user_id, int item_id, int other_item_id, bool update_u, bool update_i, bool update_j)
         {
             item_id += MaxUserID;
             other_item_id += MaxUserID;
