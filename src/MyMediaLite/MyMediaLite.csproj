@@ -54,6 +54,7 @@
     <Compile Include="IItemRelationAwareRecommender.cs" />
     <Compile Include="IIterativeModel.cs" />
     <Compile Include="IRecommender.cs" />
+    <Compile Include="ItemRecommendation\BPRFM.cs" />
     <Compile Include="IUserAttributeAwareRecommender.cs" />
     <Compile Include="IUserRelationAwareRecommender.cs" />
     <Compile Include="IItemSimilarityProvider.cs" />
