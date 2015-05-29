@@ -53,6 +53,7 @@ namespace MyMediaLite.IO
 		// MOVIELENS_1M,
 		// /// <summary>The KDD Cup 2011 rating format</summary>
 		// KDDCUP_2011,
+        FEATURE_BASED
 	}
 
 }

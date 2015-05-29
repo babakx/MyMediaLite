@@ -96,7 +96,7 @@ class ItemRecommendation : CommandLineProgram<IRecommender>
   files:
    --training-file=FILE                     read training data from FILE
    --test-file=FILE                         read test data from FILE
-   --file-format=ignore_first_line|default
+   --file-format=ignore_first_line|default|feature_based
    --no-id-mapping                          do not map user and item IDs to internal IDs, keep the original IDs
    --data-dir=DIR                           load all files from DIR
    --user-attributes=FILE                   file with user attribute information, 1 tuple per line
@@ -371,18 +371,24 @@ class ItemRecommendation : CommandLineProgram<IRecommender>
 			base.LoadData();
 
 			// training data
-			training_data = double.IsNaN(rating_threshold)
-				? ItemData.Read(training_file, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE)
-				: ItemDataRatingThreshold.Read(training_file, rating_threshold, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE);
+            if (file_format == ItemDataFileFormat.FEATURE_BASED)
+                training_data = ItemDataFeatureBased.Read(training_file, user_mapping, item_mapping, feature_mapping);
+            else
+                training_data = double.IsNaN(rating_threshold)
+                    ? ItemData.Read(training_file, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE)
+                    : ItemDataRatingThreshold.Read(training_file, rating_threshold, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE);
 
 			// test data
 			if (test_ratio == 0)
 			{
 				if (test_file != null)
 				{
-					test_data = double.IsNaN(rating_threshold)
-						? ItemData.Read(test_file, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE)
-						: ItemDataRatingThreshold.Read(test_file, rating_threshold, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE);
+                    if (file_format == ItemDataFileFormat.FEATURE_BASED)
+                        test_data = ItemDataFeatureBased.Read(test_file, user_mapping, item_mapping, feature_mapping);
+                    else
+                        test_data = double.IsNaN(rating_threshold)
+                            ? ItemData.Read(test_file, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE)
+                            : ItemDataRatingThreshold.Read(test_file, rating_threshold, user_mapping, item_mapping, file_format == ItemDataFileFormat.IGNORE_FIRST_LINE);
 				}
 			}
 			else

@@ -77,6 +77,7 @@ public abstract class CommandLineProgram<T> where T:IRecommender
 	// ID mapping objects
 	protected IMapping user_mapping = new Mapping();
 	protected IMapping item_mapping = new Mapping();
+    protected IMapping feature_mapping = new Mapping();
 
 	// user and item attributes
 	protected IBooleanMatrix user_attributes;

@@ -21,6 +21,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <GenerateDocumentation>true</GenerateDocumentation>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -49,10 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DataType\MultiKeyDictionary.cs" />
+    <Compile Include="Data\Feature.cs" />
+    <Compile Include="Data\FeatureBasedPositiveFeedback.cs" />
+    <Compile Include="Data\FeatureSet.cs" />
     <Compile Include="DelegateComparer.cs" />
     <Compile Include="IItemAttributeAwareRecommender.cs" />
     <Compile Include="IItemRelationAwareRecommender.cs" />
     <Compile Include="IIterativeModel.cs" />
+    <Compile Include="IO\ItemDataFeatureBased.cs" />
     <Compile Include="IRecommender.cs" />
     <Compile Include="ItemRecommendation\BPRFM.cs" />
     <Compile Include="IUserAttributeAwareRecommender.cs" />
@@ -262,4 +268,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(ProjectName).dll" "D:\Projects\DotNet\WrapRec\Lib\$(ProjectName).dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
