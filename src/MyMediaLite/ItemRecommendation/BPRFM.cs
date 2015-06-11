@@ -40,7 +40,7 @@ namespace MyMediaLite.ItemRecommendation
             Features = FbPositiveFeedback.Features;
             MaxFeatureId = FbPositiveFeedback.MaxFeatureId;
 
-            num_features = MaxUserID + MaxItemID + MaxFeatureId + 1;
+            num_features = MaxUserID + MaxItemID + MaxFeatureId + 3;
             
             v = new Matrix<float>(num_features, NumFactors);
             v.InitNormal(InitMean, InitStdDev);
@@ -52,15 +52,15 @@ namespace MyMediaLite.ItemRecommendation
 
         protected override void UpdateFactors(int user_id, int item_id, int other_item_id, bool update_u, bool update_i, bool update_j)
         {
-            int item_index = item_id + MaxUserID;
-            other_item_id += MaxUserID;
+            int item_index = item_id + MaxUserID + 1;
+            other_item_id += MaxUserID + 1;
             
             double y_uij = w[item_index] - w[other_item_id] + 
                 DataType.MatrixExtensions.RowScalarProductWithRowDifference(v, user_id, v, item_index, v, other_item_id);
 
             foreach (var feat in Features[user_id, item_id])
             {
-                int feat_index = feat.Key + MaxUserID + MaxItemID;
+                int feat_index = feat.Key + MaxUserID + MaxItemID + 2;
                 y_uij += feat.Value * DataType.MatrixExtensions.RowScalarProductWithRowDifference(v, feat_index, v, item_index, v, other_item_id);
             }
 
@@ -117,7 +117,7 @@ namespace MyMediaLite.ItemRecommendation
 
                 foreach (var feat in Features[user_id, item_id])
                 {
-                    int feat_index = MaxUserID + MaxItemID + feat.Key;
+                    int feat_index = MaxUserID + MaxItemID + 2 + feat.Key;
                     double update = term2 * one_over_one_plus_ex - reg_c * v[feat_index, f];
                     v[feat_index, f] = (float)(v[feat_index, f] + learn_rate * update);
                 }
@@ -136,18 +136,18 @@ namespace MyMediaLite.ItemRecommendation
             {
                 foreach (var feat in Features[user_id, item_id])
                 {
-                    int feat_index = MaxUserID + MaxItemID + feat.Key;
+                    int feat_index = MaxUserID + MaxItemID + 2 + feat.Key;
 
                     // if feat_index is greater than MaxFeatureId it means that the feature is new in test set so its factors has not been learnt
                     if (feat_index < num_features)
                     {
                         term1 += feat.Value * DataType.MatrixExtensions.RowScalarProduct(v, feat_index, v, user_id);
-                        term2 += feat.Value * DataType.MatrixExtensions.RowScalarProduct(v, feat_index, v, MaxUserID + item_id);
+                        term2 += feat.Value * DataType.MatrixExtensions.RowScalarProduct(v, feat_index, v, MaxUserID + item_id + 1);
                     }
                 }
             }
 
-            return w[MaxUserID + item_id] + term1 + term2 + DataType.MatrixExtensions.RowScalarProduct(v, user_id, v, MaxUserID + item_id);
+            return w[MaxUserID + item_id] + term1 + term2 + DataType.MatrixExtensions.RowScalarProduct(v, user_id, v, MaxUserID + item_id + 1);
         }
 
     }

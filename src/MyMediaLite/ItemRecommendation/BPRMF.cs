@@ -340,7 +340,10 @@ namespace MyMediaLite.ItemRecommendation
 		/// <param name="update_j">if true, update the latent factors of the second item</param>
 		protected virtual void UpdateFactors(int user_id, int item_id, int other_item_id, bool update_u, bool update_i, bool update_j)
 		{
-			double x_uij = item_bias[item_id] - item_bias[other_item_id] + DataType.MatrixExtensions.RowScalarProductWithRowDifference(user_factors, user_id, item_factors, item_id, item_factors, other_item_id);
+            //double bias = item_bias[item_id] - item_bias[other_item_id];
+            double bias = 0;
+
+            double x_uij = bias + DataType.MatrixExtensions.RowScalarProductWithRowDifference(user_factors, user_id, item_factors, item_id, item_factors, other_item_id);
 
 			double one_over_one_plus_ex = 1 / (1 + Math.Exp(x_uij));
 
